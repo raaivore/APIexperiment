@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import org.postgis.PGgeometry;
 import org.postgis.Point;
 
 public class ProcAddMushrooms {
@@ -19,7 +18,7 @@ public class ProcAddMushrooms {
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sqlInsert)) {
 			// Set parameters
-			preparedStatement.setObject(1, new PGgeometry("SRID=4326;POINT(" + AddLocation.getX() + " " + AddLocation.getY() + ")"));
+			preparedStatement.setObject(1, new Point("SRID=4326;POINT(" + AddLocation.getX() + " " + AddLocation.getY() + ")"));
 			preparedStatement.setString(2, AddDescription);
 
 			// Execute the SQL statement
@@ -43,8 +42,7 @@ public class ProcAddMushrooms {
 
 				while (resultSet.next()) {
 					// Loeme Geometry veeru
-					PGgeometry geometry = (PGgeometry) resultSet.getObject("location");
-					Point point = (Point) geometry.getGeometry();
+					Point point = (Point) resultSet.getObject("location");
 
 					// Loeme description veeru
 					String description = resultSet.getString("description");

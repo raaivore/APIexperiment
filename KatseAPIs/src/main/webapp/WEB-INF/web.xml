@@ -9,4 +9,40 @@
     <servlet-name>AddMushrooms</servlet-name>
     <url-pattern>/add</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <display-name>DeleteMushrooms</display-name>
+    <servlet-name>DeleteMushrooms</servlet-name>
+    <servlet-class>MushroomAPIs.DeleteMushrooms</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>DeleteMushrooms</servlet-name>
+    <url-pattern>/delete</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>UpdateMushrooms</display-name>
+    <servlet-name>UpdateMushrooms</servlet-name>
+    <servlet-class>MushroomAPIs.UpdateMushrooms</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UpdateMushrooms</servlet-name>
+    <url-pattern>/update</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>QueryMushrooms</display-name>
+    <servlet-name>QueryMushrooms</servlet-name>
+    <servlet-class>MushroomAPIs.QueryMushrooms</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>QueryMushrooms</servlet-name>
+    <url-pattern>/query</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <display-name>Clean</display-name>
+    <servlet-name>Clean</servlet-name>
+    <servlet-class>MushroomAPIs.Clean</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Clean</servlet-name>
+    <url-pattern>/clean</url-pattern>
+  </servlet-mapping>
 </web-app>
