@@ -5,31 +5,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.sql.Types;
 
+import org.postgis.PGgeometry;
 import org.postgis.Point;
 
 public class ProcUpdateMushrooms {
 
-	public static boolean UpdateMushroom(Connection connection, int MushroomId, Point newLocation, String newDescription) {
+	public static boolean UpdateMushroom(Connection connection, int MushroomId, Point newLocation,
+			String newDescription) {
 
 		boolean Updated = false;
-		
+
 		// SQL update statement
 		String sqlUpdate = "UPDATE mushrooms SET timestamp = NOW(), description = ?, location = ST_GeomFromText(?, 4326)  WHERE id = ?";
 
 		try (PreparedStatement preparedStatement = connection.prepareStatement(sqlUpdate)) {
 			// Set parameters
 			preparedStatement.setString(1, newDescription);
-	        preparedStatement.setString(2, "POINT(" + newLocation.getX() + " " + newLocation.getY() + ")");
+			preparedStatement.setString(2, "POINT(" + newLocation.getX() + " " + newLocation.getY() + ")");
 			preparedStatement.setInt(3, MushroomId);
 
-			// Execute the SQL statement
 			int rowsUpdated = preparedStatement.executeUpdate();
 			if (rowsUpdated > 0) {
-				System.out.println("Row with ID " + MushroomId + " updated successfully.");
 				Updated = true;
-			} else {
-				System.out.println("No row with ID " + MushroomId + " found.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -38,12 +37,13 @@ public class ProcUpdateMushrooms {
 		return Updated;
 	}
 
-	public static int GetUpdateMushrooms(Connection connection, Timestamp LastModifiedTS ) {
-		
+	public static int GetUpdateMushrooms(Connection connection, Timestamp LastModifiedTS) {
+
 		int UpdatedCount = 0;
-		
+
 		String sqlQuery = "SELECT features->'geometry'->'coordinates' AS coordinates, "
-				+ "features->'properties'->'description' AS description, mushroomid " + "FROM updatemushrooms WHERE timestamp > ?";
+				+ "features->'properties'->'description' AS description, mushroomid "
+				+ "FROM updatemushrooms WHERE timestamp > ?";
 
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
@@ -54,14 +54,11 @@ public class ProcUpdateMushrooms {
 			while (resultSet.next()) {
 				String coordinates = resultSet.getString("coordinates");
 				String description = resultSet.getString("description");
-                int mushroomId = resultSet.getInt("mushroomid");
-
-                System.out.println("Coordinates: " + coordinates);
-				System.out.println("Description: " + description);
+				int mushroomId = resultSet.getInt("mushroomid");
 
 				Point locationGeometry = Utils.GetPoinFromJSONLocation(coordinates);
 
-				if( UpdateMushroom(connection, mushroomId, locationGeometry, description ) )
+				if (UpdateMushroom(connection, mushroomId, locationGeometry, description))
 					UpdatedCount++;
 			}
 
@@ -70,7 +67,7 @@ public class ProcUpdateMushrooms {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return UpdatedCount;
 
 	}

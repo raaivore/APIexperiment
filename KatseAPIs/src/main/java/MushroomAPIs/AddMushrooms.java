@@ -29,7 +29,6 @@ public class AddMushrooms extends HttpServlet implements java.io.Serializable {
 		try {
 			connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 
-			// SQL päring vanima timestamp-i leidmiseks
 			String query = "SELECT timestamp AS oldest_timestamp FROM mushrooms";
 			PreparedStatement statement = connection.prepareStatement(query);
 			ResultSet resultSet = statement.executeQuery();
@@ -39,13 +38,12 @@ public class AddMushrooms extends HttpServlet implements java.io.Serializable {
 				if (oldest_timestamp.after(LastModifiedTS))
 					LastModifiedTS = oldest_timestamp;
 			}
-			System.out.println("Vanim timestamp: " + LastModifiedTS);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		if( connection == null ) {
+		if (connection == null) {
 			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
 			return;
 		}

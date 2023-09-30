@@ -37,13 +37,11 @@ public class UpdateMushrooms extends HttpServlet implements java.io.Serializable
 				if (oldest_timestamp.after(LastModifiedTS))
 					LastModifiedTS = oldest_timestamp;
 			}
-			System.out.println("Vanim timestamp: " + LastModifiedTS);
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		if( connection == null ) {
+		if (connection == null) {
 			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
 			return;
 		}

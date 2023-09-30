@@ -3,8 +3,9 @@ package MushroomAPIs;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,51 +18,49 @@ public class Clean extends HttpServlet implements java.io.Serializable {
 	private static final String USER = "mushroomer";
 	private static final String PASSWORD = "";
 
-	private static void deleteAllRecordsFromTable(Connection connection, String tableName) {
+	private static int deleteAllRecordsFromTable(Connection connection, String tableName) {
+
+		int affectedRows = 0;
+
 		try {
-			// Loome SQL päringu kõikide kirjete kustutamiseks tabelist
-			String deleteQuery = "DELETE FROM " + tableName;
-
-			// Loome PreparedStatement objekti
-			PreparedStatement statement = connection.prepareStatement(deleteQuery);
-
-			// Käivitame kustutamise päringu
-			statement.executeUpdate(deleteQuery);
-
-			System.out.println("Kõik kirjed on kustutatud tabelist: " + tableName);
+			String sql = "DELETE FROM " + tableName;
+			Statement statement = connection.createStatement();
+			affectedRows = statement.executeUpdate(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return affectedRows;
 	}
 
-	public static void ProcClean(Connection connection) {
-		deleteAllRecordsFromTable(connection, "addmushrooms");
-		deleteAllRecordsFromTable(connection, "deletemushrooms");
-		deleteAllRecordsFromTable(connection, "updatemushrooms");
-		deleteAllRecordsFromTable(connection, "querymushrooms");
+	public static int ProcClean(Connection connection) {
+		int deletede_rows = 0;
+		deletede_rows = deletede_rows + deleteAllRecordsFromTable(connection, "addmushrooms");
+		deletede_rows = deletede_rows + deleteAllRecordsFromTable(connection, "deletemushrooms");
+		deletede_rows = deletede_rows + deleteAllRecordsFromTable(connection, "updatemushrooms");
+		deletede_rows = deletede_rows + deleteAllRecordsFromTable(connection, "querymushrooms");
+		return deletede_rows;
 	}
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		boolean Ok = false;
+		int deleted_rows = 0;
+
 		Connection connection = null;
 
 		try {
 			connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
-			ProcClean(connection);
-			Ok = true;
+			deleted_rows = ProcClean(connection);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if( connection == null ) {
+
+		if (connection == null) {
 			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
 			return;
 		}
 
-
-		if (Ok)
-			response.getWriter().println("Ok");
+		response.getWriter().println("Deleted " + deleted_rows + " rows");
 	}
 }
