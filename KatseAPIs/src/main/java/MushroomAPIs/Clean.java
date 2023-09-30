@@ -45,15 +45,22 @@ public class Clean extends HttpServlet implements java.io.Serializable {
 			throws ServletException, IOException {
 
 		boolean Ok = false;
+		Connection connection = null;
 
 		try {
-			Connection connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+			connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
 			ProcClean(connection);
 			Ok = true;
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		if( connection == null ) {
+			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
+			return;
+		}
+
+
 		if (Ok)
 			response.getWriter().println("Ok");
 	}

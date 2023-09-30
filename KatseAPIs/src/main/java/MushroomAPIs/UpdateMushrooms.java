@@ -43,6 +43,11 @@ public class UpdateMushrooms extends HttpServlet implements java.io.Serializable
 			e.printStackTrace();
 		}
 
+		if( connection == null ) {
+			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
+			return;
+		}
+
 		int count = ProcUpdateMushrooms.GetUpdateMushrooms(connection, LastModifiedTS);
 
 		response.getWriter().println("Updated " + count + " mushrooms");

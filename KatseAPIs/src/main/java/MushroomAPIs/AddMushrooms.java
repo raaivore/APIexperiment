@@ -45,6 +45,11 @@ public class AddMushrooms extends HttpServlet implements java.io.Serializable {
 			e.printStackTrace();
 		}
 
+		if( connection == null ) {
+			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
+			return;
+		}
+
 		int count = ProcAddMushrooms.GetAddMushrooms(connection, LastModifiedTS);
 
 		response.getWriter().println("Added " + count + " mushrooms");

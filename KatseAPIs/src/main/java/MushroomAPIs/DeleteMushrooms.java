@@ -46,6 +46,11 @@ public class DeleteMushrooms extends HttpServlet implements java.io.Serializable
             e.printStackTrace();
         } 
 
+		if( connection == null ) {
+			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
+			return;
+		}
+
         int count = ProcDeleteMushrooms.GetDeleteMushrooms(connection, LastModifiedTS);
 
         response.getWriter().println("Deleted " + count + " mushrooms");

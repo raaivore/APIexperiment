@@ -43,6 +43,11 @@ public class QueryMushrooms extends HttpServlet implements java.io.Serializable 
 			e.printStackTrace();
 		}
 
+		if( connection == null ) {
+			response.getWriter().println("Ühendust andmebaasiga ei õnnestunud luua");
+			return;
+		}
+
 		int count = ProcQueryMushrooms.ProcQuery(connection);
 
 		response.getWriter().println("Found " + count + " mushrooms");

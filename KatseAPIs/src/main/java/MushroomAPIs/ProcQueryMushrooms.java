@@ -33,6 +33,9 @@ public class ProcQueryMushrooms {
 		
 		try {
 			String sqlQuery = "SELECT location, description FROM mushrooms";
+
+			System.out.println("ProcQuery connection - " + connection );
+			
 			try (PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery)) {
 				ResultSet resultSet = preparedStatement.executeQuery();
 
